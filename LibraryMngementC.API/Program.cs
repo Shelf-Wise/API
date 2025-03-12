@@ -15,7 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigurePersistenceService(configuration);
 builder.Services.ConfigureIdentityService(configuration);
 
-builder.Services.ConfigureApplicationService();
+builder.Services.ConfigureApplicationService(configuration);
 
 builder.Services.AddCors(options =>
 {

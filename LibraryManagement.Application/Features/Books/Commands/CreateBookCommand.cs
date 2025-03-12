@@ -8,6 +8,6 @@ namespace LibraryManagement.Application.Features.Books.Commands
         public string Author { get; set; }
         public int PublicationYear { get; set; }
         public string ISBN { get; set; }
-        public string ImageURls { get; set; } = string.Empty;
+        public string imageUrl { get; set; } = string.Empty;
     }
 }

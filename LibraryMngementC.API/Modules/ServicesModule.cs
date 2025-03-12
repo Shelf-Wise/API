@@ -1,8 +1,8 @@
-﻿using LibraryManagement.Application.Features.LibraryMembers.Commands;
+﻿using LibraryManagement.Application.Abstractions.Services;
+using LibraryManagement.Application.Features.LibraryMembers.Commands;
 using LibraryMngementC.API.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace LibraryMngementC.API.Modules
 {
@@ -12,7 +12,7 @@ namespace LibraryMngementC.API.Modules
         {
             var MapGroup = app.MapGroup("api/services")
                 .WithTags("Services");
-//
+            //
             // .RequireAuthorization("AdminPriviledges");
 
             MapGroup.MapPost(
@@ -30,6 +30,14 @@ namespace LibraryMngementC.API.Modules
                     return Results.Ok(await _mediator.Send(command));
                 }
             );
+
+            MapGroup.MapPost(
+                "/upload-image",
+                async (IFormFile file, [FromServices] ICloudfareServices _cloudfareServices) =>
+                {
+                    return Results.Ok(await _cloudfareServices.UploadFileAsync(file.OpenReadStream(), file.FileName, file.ContentType));
+                }
+            ).DisableAntiforgery();
         }
     }
 }

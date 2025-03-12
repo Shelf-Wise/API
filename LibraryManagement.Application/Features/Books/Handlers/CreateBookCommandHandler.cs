@@ -30,7 +30,7 @@ namespace LibraryManagement.Application.Features.Books.Handlers
                 command.Author,
                 command.PublicationYear,
                 command.ISBN,
-                command.ImageURls
+                command.imageUrl
             );
 
             var saved = await _repository.AddEntityAsync(_book);

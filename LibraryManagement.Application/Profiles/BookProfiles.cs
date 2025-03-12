@@ -13,6 +13,7 @@ namespace LibraryManagement.Application.Profiles
                 .ForMember(dest => dest.Author, options => options.MapFrom(src => src.Author))
                 .ForMember(dest => dest.Title, options => options.MapFrom(src => src.Title))
                 .ForMember(dest => dest.IsAvailable, options => options.MapFrom(src => src.Status))
+                .ForMember(dest => dest.ImageUrl, options => options.MapFrom(src => src.ImageURL))
                 .ForMember(
                     dest => dest.PublicationYear,
                     options => options.MapFrom(src => src.PublicationYear)
@@ -23,6 +24,7 @@ namespace LibraryManagement.Application.Profiles
                 .ForMember(dest => dest.Author, options => options.MapFrom(src => src.Author))
                 .ForMember(dest => dest.Title, options => options.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Status, options => options.MapFrom(src => src.Status))
+                .ForMember(dest => dest.ImageURL, options => options.MapFrom(src => src.ImageURL))
                 .ForMember(
                     dest => dest.PublicationYear,
                     options => options.MapFrom(src => src.PublicationYear)
@@ -32,6 +34,8 @@ namespace LibraryManagement.Application.Profiles
                 .ForMember(dest => dest.Id, options => options.MapFrom(src => src.BookId))
                 .ForMember(dest => dest.Author, options => options.MapFrom(src => src.Author))
                 .ForMember(dest => dest.Title, options => options.MapFrom(src => src.Title))
+                .ForMember(dest => dest.ImageURL, options => options.MapFrom(src => src.ImageUrl))
+                .ForMember(dest => dest.ISBN, options => options.MapFrom(src => src.isbn))
                 .ForMember(
                     dest => dest.PublicationYear,
                     options => options.MapFrom(src => src.PublicationYear)

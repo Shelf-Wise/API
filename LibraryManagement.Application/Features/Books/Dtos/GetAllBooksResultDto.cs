@@ -9,6 +9,7 @@ namespace LibraryManagement.Application.Features.Books.Dtos
         public string Author { get; set; } = string.Empty;
         public int PublicationYear { get; set; }
         public bool IsAvailable { get; set; }
+        public string? ImageURL { get; set; }
         public BookStatus Status { get; set; }
     }
 }
