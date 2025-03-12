@@ -7,9 +7,8 @@ namespace LibraryManagement.Application.Features.Authentication.Validators
     {
         public SignInCommandValidator()
         {
-            RuleFor(x => x.Username).NotEmpty().WithMessage("User Cannot be Empty");
-            RuleFor(x => x.Username).NotEmpty().WithMessage("User Cannot be Empty");
-            RuleFor(x => x.Role).NotEmpty().WithMessage("Role Cannot be Empty");
+            RuleFor(x => x.Email).NotEmpty().WithMessage("User Cannot be Empty");
+            RuleFor(x => x.Email).NotEmpty().WithMessage("User Cannot be Empty");
         }
     }
 }
