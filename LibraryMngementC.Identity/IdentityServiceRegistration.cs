@@ -1,11 +1,10 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Npgsql;
+using System.Text;
 
 namespace LibraryMngementC.Identity
 {
@@ -19,7 +18,7 @@ namespace LibraryMngementC.Identity
             services.AddDbContext<IdentityDatabaseContext>(options =>
             {
                 options
-                    .UseNpgsql(configuration.GetConnectionString("PostgresConnection"))
+                    .UseNpgsql(configuration.GetConnectionString("SupabaseConnection"))
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
             });
 

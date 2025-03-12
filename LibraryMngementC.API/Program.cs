@@ -17,6 +17,10 @@ builder.Services.ConfigureIdentityService(configuration);
 
 builder.Services.ConfigureApplicationService(configuration);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("LocalhostPolicy", policy =>

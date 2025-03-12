@@ -1,10 +1,10 @@
-﻿using System.Data;
-using LibraryManagement.Application.Abstractions.Persistence;
+﻿using LibraryManagement.Application.Abstractions.Persistence;
 using LibraryManagementC.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
+using System.Data;
 
 namespace LibraryManagementC.Persistance
 {
@@ -19,7 +19,7 @@ namespace LibraryManagementC.Persistance
             {
                 options
                     .UseNpgsql(
-                        configuration.GetConnectionString("PostgresConnection"),
+                        configuration.GetConnectionString("SupabaseConnection"),
                         b =>
                         {
                             b.MigrationsAssembly(
