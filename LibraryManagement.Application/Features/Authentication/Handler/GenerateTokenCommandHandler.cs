@@ -1,9 +1,12 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+﻿#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning disable CS8604 // Possible null reference argument.
+
 using LibraryManagement.Application.Features.Authentication.Command;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 namespace LibraryManagement.Application.Features.Authentication.Handler
 {
@@ -22,11 +25,9 @@ namespace LibraryManagement.Application.Features.Authentication.Handler
             CancellationToken cancellationToken
         )
         {
-#pragma warning disable CS8604 // Possible null reference argument.
             var authSignInKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(s: _configuration["JWT:Secret"])
             );
-#pragma warning restore CS8604 // Possible null reference argument.
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
