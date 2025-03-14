@@ -18,7 +18,7 @@ namespace LibraryMngementC.Identity
             services.AddDbContext<IdentityDatabaseContext>(options =>
             {
                 options
-                    .UseNpgsql(configuration.GetConnectionString("SupabaseConnection"))
+                    .UseNpgsql(configuration.GetConnectionString("PostgresConnection"))
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
             });
 
