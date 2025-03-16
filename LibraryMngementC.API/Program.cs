@@ -2,6 +2,7 @@ using LibraryManagement.Application;
 using LibraryManagementC.Persistance;
 using LibraryManagementC.Persistance.Extensions;
 using LibraryMngementC.API.Extensions;
+using LibraryMngementC.API.Middleware;
 using LibraryMngementC.Identity;
 using Microsoft.OpenApi.Models;
 
@@ -20,6 +21,7 @@ builder.Services.ConfigureApplicationService(configuration);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
+builder.Logging.AddAzureWebAppDiagnostics();
 
 builder.Services.AddCors(options =>
 {
@@ -58,6 +60,15 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+// Add this before var app = builder.Build();
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.Configure<LoggerFilterOptions>(options =>
+    {
+        options.MinLevel = LogLevel.Information;
+    });
+}
+
 builder.Services.AddHttpContextAccessor();
 
 
@@ -73,6 +84,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.MigrateDatabase();
 }
+
+// Add this after app.UseHttpsRedirection();
+app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
 app.UseHttpsRedirection();
 
