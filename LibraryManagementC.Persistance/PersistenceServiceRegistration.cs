@@ -19,7 +19,7 @@ namespace LibraryManagementC.Persistance
             {
                 options
                     .UseNpgsql(
-                        configuration.GetConnectionString("PostgresConnection"),
+                        configuration.GetConnectionString("SupabaseConnection"),
                         b =>
                         {
                             b.MigrationsAssembly(
@@ -35,7 +35,7 @@ namespace LibraryManagementC.Persistance
                 (sp) =>
                 {
                     return new NpgsqlConnection(
-                        configuration.GetConnectionString("PostgresConnection")
+                        configuration.GetConnectionString("SupabaseConnection")
                     );
                 }
             );
