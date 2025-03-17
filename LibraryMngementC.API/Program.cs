@@ -25,9 +25,9 @@ builder.Logging.AddAzureWebAppDiagnostics();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("LocalhostPolicy", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -76,7 +76,7 @@ var app = builder.Build();
 
 app.MapEndPoint();
 
-app.UseCors("LocalhostPolicy");
+app.UseCors("AllowAll");
 
 if (app.Environment.IsDevelopment())
 {
