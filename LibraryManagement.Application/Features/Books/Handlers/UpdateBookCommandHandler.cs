@@ -24,54 +24,53 @@ namespace LibraryManagement.Application.Features.Books.Handlers
         }
 
         public async Task<Result> Handle(
-            UpdateBookCommand command,
-            CancellationToken cancellationToken
-        )
+    UpdateBookCommand command,
+    CancellationToken cancellationToken)
         {
-            var _book = await _repository.Get(command.Id);
-
-            if(_book == null)
+            // Get the book with its genres included
+            var book = await _repository.GetWithInclude(command.Id, "Genres");
+            if (book == null)
             {
                 return Result.Failure(new Error("400", "Book not found"));
             }
 
-            _book.Title=command.Title;
-            _book.Author=command.Author;
-            _book.PublicationYear = command.PublicationYear;
-            _book.ISBN = command.ISBN;
-            _book.ImageURL = command.imageUrl;
+            // Update basic properties
+            book.Title = command.Title;
+            book.Author = command.Author;
+            book.PublicationYear = command.PublicationYear;
+            book.ISBN = command.ISBN;
+            book.ImageURL = command.imageUrl;
 
-            _book.Genres.Clear();
+            // Instead of trying to modify the collection, let's use direct SQL
+            // to manage the relationships (this avoids EF Core tracking issues)
 
+            // First, update the book entity
+            _repository.UpdateEntityAsync(book);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            // Then, handle the genre relationships directly with SQL
+            // 1. Remove all existing genre relationships
+            await _repository.ExecuteSqlRaw(
+                "DELETE FROM \"BookGenre\" WHERE \"BooksId\" = {0}", command.Id);
+
+            // 2. Add the new genre relationships
             if (command.GenreIds != null && command.GenreIds.Any())
             {
-                var genres = new List<DomainEntities.Genre>();
                 foreach (var genreId in command.GenreIds)
                 {
-
-                    // Then add the new genres
-                    foreach (var genre in genres)
+                    // Check if the genre exists
+                    var genre = await _genreRepository.Get(genreId);
+                    if (genre != null)
                     {
-                       
-                        _book.Genres.Add(genre);
+                        // Add the relationship with SQL
+                        await _repository.ExecuteSqlRaw(
+                            "INSERT INTO \"BookGenre\" (\"BooksId\", \"GenresId\") VALUES ({0}, {1})",
+                            command.Id, genreId);
                     }
-                }
-
-                // Add all found genres to the book
-                foreach (var genre in genres)
-                {
-                    _book.Genres.Add(genre);
                 }
             }
 
-            var saved = _repository.UpdateEntityAsync(_book);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            if (saved != null)
-                return Result.Success("Book Updated Successfully!");
-            else
-                return Result.Failure(new Error("400", "Unable to create book"));
+            return Result.Success("Book Updated Successfully!");
         }
     }
 }

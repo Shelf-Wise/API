@@ -108,5 +108,24 @@ namespace LibraryManagementC.Persistance.Repositories
 
             return await query.Where(expression).ToListAsync();
         }
+
+        public async Task<T> GetWithInclude(Guid id, params string[] includeProperties)
+        {
+            IQueryable<T> query = _dbSet;
+
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+
+            return await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
+        }
+
+        public async Task ExecuteSqlRaw(string sql, params object[] parameters)
+        {
+            await _context.Database.ExecuteSqlRawAsync(sql, parameters);
+        }
+
+
     }
 }

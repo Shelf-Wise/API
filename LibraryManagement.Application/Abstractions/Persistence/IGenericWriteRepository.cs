@@ -18,7 +18,8 @@ namespace LibraryManagement.Application.Abstractions.Persistence
         Task<List<T>> Find(Expression<Func<T, bool>> expression);
         Task<List<TResult>> Find<TResult>(Expression<Func<T, bool>> expression, Expression<Func<T, TResult>> selector);
         Task<List<T>> FindWithInclude(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IQueryable<T>>? includeExpression = null);
-
+        Task<T> GetWithInclude(Guid id, params string[] includeProperties);
+        Task ExecuteSqlRaw(string sql, params object[] parameters);
 
 
 
