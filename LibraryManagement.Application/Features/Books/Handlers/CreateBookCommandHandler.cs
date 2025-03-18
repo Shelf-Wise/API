@@ -36,6 +36,7 @@ namespace LibraryManagement.Application.Features.Books.Handlers
                 command.imageUrl
             );
 
+
             if (command.GenreIds != null && command.GenreIds.Any())
             {
                 var genres = new List<DomainEntities.Genre>();
