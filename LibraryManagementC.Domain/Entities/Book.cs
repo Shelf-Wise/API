@@ -5,9 +5,9 @@ namespace LibraryManagementC.Domain.Entities
 {
     public class Book : BaseEntity
     {
-        public string Title { get; private set; }
-        public string Author { get; private set; }
-        public int PublicationYear { get; private set; }
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public int PublicationYear { get; set; }
         public string ISBN { get; set; }
         public BookStatus Status { get; set; }
         public string ImageURL { get; set; }

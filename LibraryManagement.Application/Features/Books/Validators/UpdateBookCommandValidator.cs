@@ -26,12 +26,6 @@ namespace LibraryManagement.Application.Features.Books.Validators
                 .WithMessage("Publication Year Cannot be Null")
                 .ExclusiveBetween(1800, 2024)
                 .WithMessage("Publication Year Must be 1800 to 2024");
-
-            RuleFor(x => x.Category)
-                .NotEmpty()
-                .WithMessage("Cateory cannot be null")
-                .IsInEnum()
-                .WithMessage("Category must be between 1 and 3");
         }
     }
 }
