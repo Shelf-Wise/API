@@ -32,7 +32,8 @@ namespace LibraryManagement.Application.Features.Members.Handlers
                 command.Nic,
                 command.Telephone,
                 command.Email,
-                command.Dob
+                command.Dob,
+                command.ImageUrl
             );
 
             _repository.UpdateEntityAsync(member);

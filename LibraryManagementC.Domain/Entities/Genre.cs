@@ -1,11 +1,22 @@
-﻿using LibraryManagementC.Domain.Enums;
-using LibraryManagementC.Domain.Primitives;
+﻿using LibraryManagementC.Domain.Primitives;
+using System.Text.Json.Serialization;
 
 namespace LibraryManagementC.Domain.Entities
 {
     public class Genre : BaseEntity
     {
-        public required string Name { get; set; }
-        public required IList<Book> Books { get; set; }
+        public string Name { get; set; }
+        [JsonIgnore]
+        public IList<Book> Books { get; set; }
+
+        public Genre(string name)
+        {
+            Name = name;
+        }
+
+        public static Genre Create(string name)
+        {
+            return new Genre(name);
+        }
     }
 }

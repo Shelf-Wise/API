@@ -10,5 +10,6 @@ namespace LibraryManagement.Application.Features.Members.Commands
         public string DOB { get; set; }
         public string NIC { get; set; }
         public string Address { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

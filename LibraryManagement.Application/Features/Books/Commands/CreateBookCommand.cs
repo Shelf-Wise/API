@@ -9,5 +9,7 @@ namespace LibraryManagement.Application.Features.Books.Commands
         public int PublicationYear { get; set; }
         public string ISBN { get; set; }
         public string imageUrl { get; set; } = string.Empty;
+        public IEnumerable<Guid> GenreIds { get; set; } = new List<Guid>();
+
     }
 }

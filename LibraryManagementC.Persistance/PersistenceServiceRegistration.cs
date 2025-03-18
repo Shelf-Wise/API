@@ -26,8 +26,7 @@ namespace LibraryManagementC.Persistance
                                 typeof(ApplicationWriteDbContext).Assembly.FullName
                             );
                             b.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-                        }
-                    )
+                        })
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
             });
 

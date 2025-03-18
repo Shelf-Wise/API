@@ -25,7 +25,8 @@ namespace LibraryManagement.Application.Features.Members.Handlers
                 command.NIC,
                 command.Telephone,
                 command.Email,
-                command.DOB
+                command.DOB,
+                command.ImageUrl
             );
 
             await _repository.AddEntityAsync(member);

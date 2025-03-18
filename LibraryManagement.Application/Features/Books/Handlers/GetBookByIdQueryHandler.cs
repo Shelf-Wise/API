@@ -10,10 +10,10 @@ namespace LibraryManagement.Application.Features.Books.Handlers
 {
     public class GetBookByIdQueryHandler : IQueryHandler<GetBookByIdQuery, Result<GetBookResultDto>>
     {
-        private readonly IGenericReadRepository<Book> _repository;
+        private readonly IGenericWriteRepository<Book> _repository;
         private readonly IMapper _mapper;
 
-        public GetBookByIdQueryHandler(IGenericReadRepository<Book> repository, IMapper mapper)
+        public GetBookByIdQueryHandler(IGenericWriteRepository<Book> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -24,7 +24,7 @@ namespace LibraryManagement.Application.Features.Books.Handlers
             CancellationToken cancellationToken
         )
         {
-            var book = await _repository.GetByIdAsync(query.BookId, "Books");
+            var book = await _repository.Get(query.BookId, q => q.Genres);
 
             if (book == null)
                 return Result.Failure<GetBookResultDto>(

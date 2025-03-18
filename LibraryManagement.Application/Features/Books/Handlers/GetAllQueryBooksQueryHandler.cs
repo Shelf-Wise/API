@@ -11,10 +11,10 @@ namespace LibraryManagement.Application.Features.Books.Handlers
     public class GetAllBooksQueryHandler
         : IQueryHandler<GetAllBooksQuery, Result<List<GetAllBooksResultDto>>>
     {
-        private readonly IGenericReadRepository<Book> _repository;
+        private readonly IGenericWriteRepository<Book> _repository;
         private readonly IMapper _mapper;
 
-        public GetAllBooksQueryHandler(IGenericReadRepository<Book> repository, IMapper mapper)
+        public GetAllBooksQueryHandler(IGenericWriteRepository<Book> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -25,7 +25,7 @@ namespace LibraryManagement.Application.Features.Books.Handlers
             CancellationToken cancellationToken
         )
         {
-            var books = await _repository.GetAllAsync("Books");
+            var books = await _repository.GetAllWithInclude(b => b.Genres);
 
             if (books == null)
                 return Result.Failure(

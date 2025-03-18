@@ -10,5 +10,6 @@ namespace LibraryManagement.Application.Features.Members.Dtos
         public string nic { get; set; }
         public string Telephone { get; set; }
         public string dob { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

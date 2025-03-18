@@ -11,5 +11,6 @@ namespace LibraryManagement.Application.Features.Books.Dtos
         public bool IsAvailable { get; set; }
         public string? ImageURL { get; set; }
         public BookStatus Status { get; set; }
+        public IEnumerable<LibraryManagementC.Domain.Entities.Genre> Genres { get; set; } = new List<LibraryManagementC.Domain.Entities.Genre>();
     }
 }

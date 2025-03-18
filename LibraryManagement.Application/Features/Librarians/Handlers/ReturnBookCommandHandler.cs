@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
 using LibraryManagement.Application.Abstractions.Messaging;
 using LibraryManagement.Application.Abstractions.Persistence;
-using LibraryManagement.Application.Features.Books.Queries;
 using LibraryManagement.Application.Features.LibraryMembers.Commands;
-using LibraryManagement.Application.Features.LibraryMembers.Query;
 using LibraryManagement.Application.Shared;
 using LibraryManagementC.Domain.Entities;
 using LibraryManagementC.Domain.Enums;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
 {
@@ -42,7 +39,7 @@ namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
         {
             var returnedBooks = await _borrowHistoryRepo.GetAllWithInclude(b => b.Book, m => m.Member);
 
-            var returnedBook = returnedBooks.Where(b => command.BookID == b.BookId && b.MemberId == command.MemberId).FirstOrDefault();
+            var returnedBook = returnedBooks.Where(b => command.BookID == b.BookId && b.MemberId == command.MemberId && b.ReturnDate == DateOnly.MinValue).FirstOrDefault();
 
             if (returnedBook == null)
                 return Result.Failure(
@@ -52,7 +49,7 @@ namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
                     )
                 );
 
-            if(returnedBook.Book.Status == BookStatus.AVAILABLE)
+            if (returnedBook.Book.Status == BookStatus.AVAILABLE)
                 return Result.Failure(
                     new Error(
                         $"404",

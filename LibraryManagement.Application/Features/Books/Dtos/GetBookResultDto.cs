@@ -12,5 +12,7 @@ namespace LibraryManagement.Application.Features.Books.Dtos
         public string ImageUrl { get; set; }
         public string isbn { get; set; }
         public Guid MemberId { get; set; }
+        public IEnumerable<LibraryManagementC.Domain.Entities.Genre> Genres { get; set; } = new List<LibraryManagementC.Domain.Entities.Genre>();
+
     }
 }

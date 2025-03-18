@@ -1,4 +1,5 @@
 ﻿using LibraryManagement.Application.Abstractions.Services;
+using LibraryManagement.Application.Features.Books.Queries;
 using LibraryManagement.Application.Features.LibraryMembers.Commands;
 using LibraryMngementC.API.Interfaces;
 using MediatR;
@@ -28,6 +29,22 @@ namespace LibraryMngementC.API.Modules
                 async (ReturnBookCommand command, [FromServices] IMediator _mediator) =>
                 {
                     return Results.Ok(await _mediator.Send(command));
+                }
+            );
+
+            MapGroup.MapGet(
+                "/getBorrowedBooksByMemberId/{memberId}",
+                async (Guid memberId, [FromServices] IMediator mediator) =>
+                {
+                    var query = new GetBorrowedBooksByMemberIdQuery { MemberId = memberId };
+                    var result = await mediator.Send(query);
+
+                    if (result.IsSuccess)
+                    {
+                        return Results.Ok(result.Value);
+                    }
+
+                    return Results.BadRequest(result.Error);
                 }
             );
 

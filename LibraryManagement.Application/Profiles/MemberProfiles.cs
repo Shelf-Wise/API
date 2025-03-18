@@ -12,6 +12,7 @@ namespace LibraryManagement.Application.Profiles
                 .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Email, options => options.MapFrom(src => src.Email))
                 .ForMember(dest => dest.NoOfBooksBorrowed, options => options.MapFrom(src => src.Books.Count))
+                //.ForMember(dest => dest.ImagUrl, options => options.MapFrom(src => src.ImageUrl))
                 .ForMember(dest => dest.FullName, options => options.MapFrom(src => src.FullName));
 
             CreateMap<Member, GetMemberResponseDto>()

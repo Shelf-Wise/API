@@ -2,21 +2,24 @@
 using LibraryManagement.Application.Abstractions.Persistence;
 using LibraryManagement.Application.Features.Books.Commands;
 using LibraryManagement.Application.Shared;
-using LibraryManagementC.Domain.Entities;
+using DomainEntities = LibraryManagementC.Domain.Entities;
 
 namespace LibraryManagement.Application.Features.Books.Handlers
 {
     public class CreateBookCommandHandler : ICommandHandler<CreateBookCommand>
     {
-        private readonly IGenericWriteRepository<Book> _repository;
+        private readonly IGenericWriteRepository<DomainEntities.Book> _repository;
+        private readonly IGenericWriteRepository<DomainEntities.Genre> _genreRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public CreateBookCommandHandler(
-            IGenericWriteRepository<Book> repository,
+            IGenericWriteRepository<DomainEntities.Book> repository,
+            IGenericWriteRepository<DomainEntities.Genre> genreRepository,
             IUnitOfWork unitOfWork
         )
         {
             _repository = repository;
+            _genreRepository = genreRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -25,13 +28,32 @@ namespace LibraryManagement.Application.Features.Books.Handlers
             CancellationToken cancellationToken
         )
         {
-            var _book = Book.Create(
+            var _book = DomainEntities.Book.Create(
                 command.Title,
                 command.Author,
                 command.PublicationYear,
                 command.ISBN,
                 command.imageUrl
             );
+
+            if (command.GenreIds != null && command.GenreIds.Any())
+            {
+                var genres = new List<DomainEntities.Genre>();
+                foreach (var genreId in command.GenreIds)
+                {
+                    var genre = await _genreRepository.Get(genreId);
+                    if (genre != null)
+                    {
+                        genres.Add(genre);
+                    }
+                }
+
+                // Add all found genres to the book
+                foreach (var genre in genres)
+                {
+                    _book.Genres.Add(genre);
+                }
+            }
 
             var saved = await _repository.AddEntityAsync(_book);
 
