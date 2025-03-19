@@ -125,6 +125,88 @@ namespace LibraryManagementC.Persistance.Repositories
         {
             await _context.Database.ExecuteSqlRawAsync(sql, parameters);
         }
+        public virtual async Task<IReadOnlyList<T>> GetAllAsync(
+           Expression<Func<T, bool>> predicate = null,
+           Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+           string includeProperties = "",
+           int? skip = null,
+           int? take = null)
+        {
+            IQueryable<T> query = _dbSet;
+
+            // Apply predicate if provided
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            // Include related entities
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty.Trim());
+                }
+            }
+
+            // Apply ordering if provided
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            // Apply pagination if provided
+            if (skip.HasValue)
+            {
+                query = query.Skip(skip.Value);
+            }
+
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+
+            return await query.ToListAsync();
+        }
+
+        public virtual async Task<T> GetByIdAsync(Guid id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
+        public virtual async Task<T> GetFirstOrDefaultAsync(
+            Expression<Func<T, bool>> predicate = null,
+            string includeProperties = "")
+        {
+            IQueryable<T> query = _dbSet;
+
+            // Apply predicate if provided
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            // Include related entities
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty.Trim());
+                }
+            }
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null)
+        {
+            if (predicate == null)
+            {
+                return await _dbSet.CountAsync();
+            }
+            return await _dbSet.CountAsync(predicate);
+        }
+
 
 
     }
