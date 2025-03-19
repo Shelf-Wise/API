@@ -52,6 +52,14 @@ namespace LibraryMngementC.API.Modules
                     return Results.Ok(await _mediator.Send(new GetBookByIdQuery(id)));
                 }
             );
+
+            MapGroup.MapGet(
+                "/recommend/{id}",
+                async (Guid id, [FromServices] IMediator _mediator) =>
+                {
+                    return Results.Ok(await _mediator.Send(new RecommendationSystemQuery(id)));
+                }
+            );
         }
     }
 }
