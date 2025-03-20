@@ -15,5 +15,6 @@ namespace LibraryManagement.Application.Features.Books.Dtos
         public string BorrowDate { get; set; }
         public string ReturnDate { get; set; }
         public string CreatedAt { get; set; }
+        public int Fine { get; set; } // New property for the fine amount
     }
 }
