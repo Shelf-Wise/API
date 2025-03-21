@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LibraryManagement.Application.Abstractions.Messaging;
 using LibraryManagement.Application.Abstractions.Persistence;
+using LibraryManagement.Application.Abstractions.Services;
 using LibraryManagement.Application.Features.LibraryMembers.Commands;
 using LibraryManagement.Application.Shared;
 using LibraryManagementC.Domain.Entities;
@@ -13,6 +14,7 @@ namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
     {
         private readonly IGenericWriteRepository<Member> _libraryWriteRepo;
         private readonly IGenericWriteRepository<BorrowHistory> _borrowHistoryRepo;
+        private readonly IEmailService emailService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
@@ -22,14 +24,15 @@ namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
             IGenericWriteRepository<BorrowHistory> borrowHistoryRepo,
             IUnitOfWork unitOfWork,
             IMediator mediator,
-            IMapper mapper
-        )
+            IMapper mapper,
+            IEmailService emailService)
         {
             _libraryWriteRepo = libraryWriteRepo;
             _borrowHistoryRepo = borrowHistoryRepo;
             _unitOfWork = unitOfWork;
             _mediator = mediator;
             _mapper = mapper;
+            this.emailService = emailService;
         }
 
         public async Task<Result> Handle(
@@ -57,6 +60,8 @@ namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
                     )
                 );
 
+            await emailService.SendBookReturnedEmailAsync(returnedBook.Member, returnedBook.Book, DateTime.Now);
+
             returnedBook.ReturnDate = DateOnly.FromDateTime(DateTime.Now);
             returnedBook.Book.Status = BookStatus.AVAILABLE;
             //returnedBook.MemberId = Guid.Empty;
@@ -69,6 +74,9 @@ namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
             _borrowHistoryRepo.UpdateEntityAsync(returnedBook);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            // await emailService.SendBookReturnedEmailAsync(returnedBook.Member, returnedBook.Book, DateTime.Now);
+
             return Result.Success("Successfully Returned");
         }
     }
