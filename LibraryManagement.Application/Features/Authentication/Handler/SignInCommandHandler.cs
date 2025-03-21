@@ -1,5 +1,6 @@
 ﻿using LibraryManagement.Application.Abstractions.Messaging;
 using LibraryManagement.Application.Features.Authentication.Command;
+using LibraryManagement.Application.Features.Authentication.Dto;
 using LibraryManagement.Application.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -72,7 +73,13 @@ namespace LibraryManagement.Application.Features.Authentication.Handler
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(Token);
 
-            return Result.Success(tokenString);
+            var response = new SignInResponse();
+
+            response.Email = user.Email;
+            response.Username = user.UserName;
+            response.token = tokenString;
+
+            return Result.Success(response);
         }
     }
 }

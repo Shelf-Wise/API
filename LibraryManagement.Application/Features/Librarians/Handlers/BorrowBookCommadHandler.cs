@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LibraryManagement.Application.Abstractions.Messaging;
 using LibraryManagement.Application.Abstractions.Persistence;
+using LibraryManagement.Application.Abstractions.Services;
 using LibraryManagement.Application.Features.Books.Queries;
 using LibraryManagement.Application.Features.LibraryMembers.Commands;
 using LibraryManagement.Application.Features.LibraryMembers.Query;
@@ -16,6 +17,7 @@ namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
         private readonly IGenericWriteRepository<Member> _memberRepo;
         private readonly IGenericWriteRepository<Book> _bookWriteRepository;
         private readonly IGenericWriteRepository<BorrowHistory> _bookHistoryWriteRepository;
+        private readonly IEmailService emailService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
@@ -26,7 +28,8 @@ namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
             IUnitOfWork unitOfWork,
             IMediator mediator,
             IMapper mapper,
-            IGenericWriteRepository<BorrowHistory> bookHistoryWriteRepository)
+            IGenericWriteRepository<BorrowHistory> bookHistoryWriteRepository,
+            IEmailService emailService)
         {
             _memberRepo = memberRepo;
             _bookWriteRepository = bookWriteRepository;
@@ -34,6 +37,7 @@ namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
             _mediator = mediator;
             _mapper = mapper;
             _bookHistoryWriteRepository = bookHistoryWriteRepository;
+            this.emailService = emailService;
         }
 
         public async Task<Result> Handle(
@@ -68,6 +72,8 @@ namespace LibraryManagement.Application.Features.LibraryMembers.Handlers
                         $"Book with id {command.BookID} is already borrowed"
                     )
                 );
+
+            await emailService.SendBookBorrowedEmailAsync(member, book, DateTime.Now.AddDays(14));
 
             book.Status = BookStatus.BORROWED;
             book.Member = member;
