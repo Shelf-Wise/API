@@ -20,6 +20,10 @@ namespace LibraryManagement.Application.Features.Authentication.Handler
         {
             var userExists = await _userManager.FindByEmailAsync(command.Email);
             if (userExists != null)
+                return Result.Failure(new Error("400", "Email already exists"));
+
+            var userExists2 = await _userManager.FindByNameAsync(command.UserName);
+            if (userExists2 != null)
                 return Result.Failure(new Error("400", "Username already exists"));
 
             var user = new IdentityUser

@@ -10,10 +10,7 @@ namespace LibraryMngementC.API.Modules.Authentication
         public void MapEndEndpoint(WebApplication app)
         {
             var MapGroup = app.MapGroup("api")
-                .WithTags("authentication")
-                .WithDescription(
-                    "There are only two roles as LibraryStaffMinor, LibraryStaffManagement"
-                );
+                .WithTags("authentication");
 
             MapGroup.MapPost(
                 "/signUp",
